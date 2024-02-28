@@ -54,11 +54,7 @@ When the data schema is updated, the database needs to be synchronised with the 
 migrationName=<name> yarn migration:generate
 ```
 
-##################################################################################################################################
-
 # Hiring Test
-
-##################################################################################################################################
 
 When working on the following exercise, in addition to answering the product need, to give particular attention to the following points:
 
