@@ -1,9 +1,8 @@
-import { Body, Controller, Post, Get } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CalculatedCarbonFootprintService } from "./calculatedCarbonFootprint.service";
-import { CalculatedCarbonFootprint } from "./calculatedCarbonFootprint.entity";
 import { Repository } from "typeorm";
-import { Index } from "typeorm";
+import { CalculatedCarbonFootprint } from "./calculatedCarbonFootprint.entity";
+import { CalculatedCarbonFootprintService } from "./calculatedCarbonFootprint.service";
 
 @Controller("carbon-footprint")
 export class CalculatedCarbonFootprintController {
@@ -16,18 +15,18 @@ export class CalculatedCarbonFootprintController {
     @Post('calculate')
     async initiateCalculateCarbonFootprint(@Body() 
     requestData: { recipeName: string, ingredients:{ name: string, unit: string, quantity: number }[]}): 
-    Promise<{ recipeName: string, totalCarbonFootprint: number | null }>{
-      let { recipeName, ingredients } = requestData;
-      let totalCarbonFootprint = await this.calculatedCarbonFootprintService.calculateCarbonFootprint(ingredients)
+    Promise<{recipeName:string, totalCarbon:number}  | null | string>{
+      const { recipeName, ingredients } = requestData;
 
-      if (totalCarbonFootprint === null){
-        totalCarbonFootprint = 0
+      let findRecipe = await this.calculatedCarbonFootprintRepository.findOne({where:{ recipe: recipeName}});
+      if (findRecipe){
+        return "Recipe Already Exists"
       }
-      
-      let calculatedCarbonFootprint = new CalculatedCarbonFootprint(recipeName, totalCarbonFootprint)
-      await this.calculatedCarbonFootprintRepository.save(calculatedCarbonFootprint);
-
-      return {recipeName, totalCarbonFootprint}
+      const  totalCarbonFootprint = await this.calculatedCarbonFootprintService.calculateCarbonFootprint(recipeName,ingredients)
+      if (totalCarbonFootprint === null){
+        return "Cannot Calculate Carbon Footprint"
+      }
+      return {recipeName, totalCarbon:totalCarbonFootprint.sumOfCarbonFootprint};
     }
 
     @Get()

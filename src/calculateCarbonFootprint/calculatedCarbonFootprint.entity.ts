@@ -16,13 +16,13 @@ export class CalculatedCarbonFootprint extends BaseEntity {
   })
   totalCarbonFootprint: number;
 
-  constructor(
+  constructor(props:{
     recipe: string,
     totalCarbonFootprint: number
-  ) {
+  }) {
     super();
 
-    this.recipe = recipe;
-    this.totalCarbonFootprint = totalCarbonFootprint;
+    this.recipe = props?.recipe;
+    this.totalCarbonFootprint = props?.totalCarbonFootprint;
   }
 }
