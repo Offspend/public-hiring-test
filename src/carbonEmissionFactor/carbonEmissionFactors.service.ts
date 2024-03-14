@@ -8,7 +8,7 @@ import { CreateCarbonEmissionFactorDto } from "./dto/create-carbonEmissionFactor
 export class CarbonEmissionFactorsService {
   constructor(
     @InjectRepository(CarbonEmissionFactor)
-    private carbonEmissionFactorRepository: Repository<CarbonEmissionFactor>
+    private carbonEmissionFactorRepository: Repository<CarbonEmissionFactor>,
   ) {}
 
   findAll(): Promise<CarbonEmissionFactor[]> {
@@ -20,4 +20,5 @@ export class CarbonEmissionFactorsService {
   ): Promise<CarbonEmissionFactor[] | null> {
     return this.carbonEmissionFactorRepository.save(carbonEmissionFactor);
   }
+
 }
