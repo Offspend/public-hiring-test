@@ -4,8 +4,17 @@ import { Repository } from "typeorm";
 import { CarbonEmissionFactor } from "./carbonEmissionFactor.entity";
 import { CreateCarbonEmissionFactorDto } from "./dto/create-carbonEmissionFactor.dto";
 
+export interface ICarbonEmissionFactorsService {
+  findAll(): Promise<CarbonEmissionFactor[]>;
+  save(
+    carbonEmissionFactor: CreateCarbonEmissionFactorDto[],
+  ): Promise<CarbonEmissionFactor[] | null>;
+}
+
 @Injectable()
-export class CarbonEmissionFactorsService {
+export class CarbonEmissionFactorsService
+  implements ICarbonEmissionFactorsService
+{
   constructor(
     @InjectRepository(CarbonEmissionFactor)
     private carbonEmissionFactorRepository: Repository<CarbonEmissionFactor>
