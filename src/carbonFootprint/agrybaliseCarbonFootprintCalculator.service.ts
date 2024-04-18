@@ -15,7 +15,7 @@ class CarbonEmissionFactorNotFoundError extends Error {
   }
 }
 
-interface CarbonFootprintCalculator {
+export interface CarbonFootprintCalculator {
   calculate(product: FoodProduct): Promise<CarbonFootprint>;
 }
 
