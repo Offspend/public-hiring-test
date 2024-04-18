@@ -7,16 +7,15 @@ import { AgrybaliseCarbonFootprintCalculatorService } from "./agrybaliseCarbonFo
 import { CarbonEmissionFactorsModule } from "../carbonEmissionFactor/carbonEmissionFactors.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CarbonFootprint])],
+  imports: [
+    TypeOrmModule.forFeature([CarbonFootprint]),
+    CarbonEmissionFactorsModule,
+  ],
   providers: [
     CarbonFootprintService,
     {
       provide: "CarbonFootprintCalculator",
       useClass: AgrybaliseCarbonFootprintCalculatorService,
-    },
-    {
-      provide: "ICarbonEmissionFactorsService",
-      useClass: CarbonEmissionFactorsModule,
     },
   ],
   controllers: [CarbonFootprintController],

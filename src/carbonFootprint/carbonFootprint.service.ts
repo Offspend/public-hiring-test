@@ -14,9 +14,12 @@ export class CarbonFootprintNotFound extends HttpException {
   }
 }
 
-export class CarbonFootprintAlreadyExist extends Error {
+export class CarbonFootprintAlreadyExist extends HttpException {
   constructor(productName: string) {
-    super(`Carbon footprint already exists for product name "${productName}"`);
+    super(
+      `Carbon footprint already exists for product name "${productName}"`,
+      HttpStatus.CONFLICT,
+    );
   }
 }
 
@@ -62,7 +65,7 @@ export class CarbonFootprintService {
   }
 
   async create(product: FoodProduct): Promise<CarbonFootprint> {
-    this.assertCarbonFootprintDoesNotExist(product);
+    await this.assertCarbonFootprintDoesNotExist(product);
 
     const footprint = await this.calculator.calculate(product);
     return this.carbonFootprintRepository.save(
