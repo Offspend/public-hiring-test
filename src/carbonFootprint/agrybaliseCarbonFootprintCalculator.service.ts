@@ -4,8 +4,8 @@ import { Ingredient } from "./domain/Ingredient";
 
 export class CarbonFootprint {
   constructor(
-    public readonly weight: number,
-    public readonly unit: string,
+    public readonly weight: number | null,
+    public readonly unit: "kg" = "kg",
   ) {}
 }
 
@@ -16,7 +16,7 @@ class CarbonEmissionFactorNotFoundError extends Error {
 }
 
 interface CarbonFootprintCalculator {
-  calculate(product: FoodProduct): Promise<CarbonFootprint | null>;
+  calculate(product: FoodProduct): Promise<CarbonFootprint>;
 }
 
 export class AgrybaliseCarbonFootprintCalculatorService
@@ -26,7 +26,7 @@ export class AgrybaliseCarbonFootprintCalculatorService
     private readonly carbonEmissionFactorsService: ICarbonEmissionFactorsService,
   ) {}
 
-  async calculate(product: FoodProduct): Promise<CarbonFootprint | null> {
+  async calculate(product: FoodProduct): Promise<CarbonFootprint> {
     try {
       const carbonEmissionFactors =
         await this.findCarbonEmissionFactors(product);
@@ -36,10 +36,10 @@ export class AgrybaliseCarbonFootprintCalculatorService
         return weight + ingredient.quantity * factor.emissionCO2eInKgPerUnit;
       }, 0);
 
-      return new CarbonFootprint(totalWeight, "kg");
+      return new CarbonFootprint(totalWeight);
     } catch (error) {
       if (error instanceof CarbonEmissionFactorNotFoundError) {
-        return null;
+        return new CarbonFootprint(null);
       }
       throw error;
     }

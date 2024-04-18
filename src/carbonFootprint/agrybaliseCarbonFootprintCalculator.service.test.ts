@@ -44,13 +44,13 @@ describe("agrybaliseCarbonFootprintCalculator", () => {
   });
 
   describe("given some ingredients do not have a carbon footprint", () => {
-    it("should return null", async () => {
+    it("should return a null carbon foot print", async () => {
       const orangeJuice = new FoodProduct("orangeJuice", [
         new Ingredient("orange", 1),
       ]);
 
       const carbonFootprint = await sut.calculate(orangeJuice);
-      expect(carbonFootprint).toBeNull();
+      expect(carbonFootprint).toEqual({ weight: null, unit: "kg" });
     });
   });
 });
