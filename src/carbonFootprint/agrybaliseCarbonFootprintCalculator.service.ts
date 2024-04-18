@@ -1,3 +1,4 @@
+import { Injectable, Inject } from "@nestjs/common";
 import { ICarbonEmissionFactorsService } from "src/carbonEmissionFactor/carbonEmissionFactors.service";
 import { FoodProduct } from "./domain/FoodProduct";
 import { Ingredient } from "./domain/Ingredient";
@@ -19,10 +20,12 @@ export interface CarbonFootprintCalculator {
   calculate(product: FoodProduct): Promise<CarbonFootprint>;
 }
 
+@Injectable()
 export class AgrybaliseCarbonFootprintCalculatorService
   implements CarbonFootprintCalculator
 {
   constructor(
+    @Inject("ICarbonEmissionFactorsService")
     private readonly carbonEmissionFactorsService: ICarbonEmissionFactorsService,
   ) {}
 

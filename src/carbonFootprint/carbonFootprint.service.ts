@@ -1,13 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CarbonFootprint } from "./carbonFootprint.entity";
 import { CarbonFootprintCalculator } from "./agrybaliseCarbonFootprintCalculator.service";
 import { FoodProduct } from "./domain/FoodProduct";
 
-class CarbonFootprintNotFound extends Error {
+export class CarbonFootprintNotFound extends HttpException {
   constructor(productName: string) {
-    super(`Carbon footprint not found for product name "${productName}"`);
+    super(
+      `Carbon footprint not found for product name "${productName}"`,
+      HttpStatus.NOT_FOUND,
+    );
   }
 }
 
@@ -28,12 +31,13 @@ class CarbonFootprintUnknownError extends Error {
 @Injectable()
 export class CarbonFootprintService {
   constructor(
+    @Inject("CarbonFootprintCalculator")
     private readonly calculator: CarbonFootprintCalculator,
     @InjectRepository(CarbonFootprint)
     private readonly carbonEmissionFactorRepository: Repository<CarbonFootprint>,
   ) {}
 
-  private async findByName(productName: string): Promise<CarbonFootprint> {
+  async findByName(productName: string): Promise<CarbonFootprint> {
     const carbonFootprint = await this.carbonEmissionFactorRepository.findOneBy(
       {
         productName,

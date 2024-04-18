@@ -4,6 +4,7 @@ import { AgrybaliseCarbonFootprintCalculatorService } from "./agrybaliseCarbonFo
 import { CarbonFootprint } from "./carbonFootprint.entity";
 import {
   CarbonFootprintAlreadyExist,
+  CarbonFootprintNotFound,
   CarbonFootprintService,
 } from "./carbonFootprint.service";
 import { CarbonEmissionFactorsService } from "../carbonEmissionFactor/carbonEmissionFactors.service";
@@ -31,6 +32,37 @@ beforeEach(async () => {
 });
 
 describe("CarbonFootprintService", () => {
+  describe("findByName", () => {
+    describe("given a carbon footprint for a product", () => {
+      const productName = "poulet de bresse";
+      let carbonFootprint: CarbonFootprint;
+
+      beforeEach(async () => {
+        carbonFootprint = await dataSource.getRepository(CarbonFootprint).save(
+          new CarbonFootprint({
+            productName,
+            weight: 42,
+            unit: "kg",
+          }),
+        );
+      });
+
+      it("should return the carbon footprint", async () => {
+        const carbonFootprintByName = await sut.findByName(productName);
+
+        expect(carbonFootprintByName).toEqual(carbonFootprint);
+      });
+    });
+
+    describe("given a non existing carbon footprint", () => {
+      it("should throw", async () => {
+        await expect(() => {
+          return sut.findByName("non-existing-product");
+        }).rejects.toThrow(CarbonFootprintNotFound);
+      });
+    });
+  });
+
   describe("create", () => {
     describe("given a product with ingredients", () => {
       let product: FoodProduct;
