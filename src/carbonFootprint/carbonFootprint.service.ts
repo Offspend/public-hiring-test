@@ -34,15 +34,13 @@ export class CarbonFootprintService {
     @Inject("CarbonFootprintCalculator")
     private readonly calculator: CarbonFootprintCalculator,
     @InjectRepository(CarbonFootprint)
-    private readonly carbonEmissionFactorRepository: Repository<CarbonFootprint>,
+    private readonly carbonFootprintRepository: Repository<CarbonFootprint>,
   ) {}
 
   async findByName(productName: string): Promise<CarbonFootprint> {
-    const carbonFootprint = await this.carbonEmissionFactorRepository.findOneBy(
-      {
-        productName,
-      },
-    );
+    const carbonFootprint = await this.carbonFootprintRepository.findOneBy({
+      productName,
+    });
 
     if (!carbonFootprint) {
       throw new CarbonFootprintNotFound(productName);
@@ -67,7 +65,7 @@ export class CarbonFootprintService {
     this.assertCarbonFootprintDoesNotExist(product);
 
     const footprint = await this.calculator.calculate(product);
-    return this.carbonEmissionFactorRepository.save(
+    return this.carbonFootprintRepository.save(
       new CarbonFootprint({
         productName: product.name,
         weight: footprint.weight,
