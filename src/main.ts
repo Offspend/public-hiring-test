@@ -3,6 +3,7 @@ import { NestFactory } from "@nestjs/core";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { dataSource } from "../config/dataSource";
 import { AppModule } from "./app.module";
+import { ExceptionLogger } from "./common/exceptionLogger.filter";
 
 async function bootstrap() {
   if (!dataSource.isInitialized) {
@@ -14,6 +15,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new ExceptionLogger());
 
   const documentationConfig = new DocumentBuilder()
       .setTitle('My food product footprint calculator API')
