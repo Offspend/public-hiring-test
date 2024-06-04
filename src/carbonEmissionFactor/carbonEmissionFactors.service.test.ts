@@ -33,12 +33,23 @@ describe("CarbonEmissionFactors.service", () => {
       .findOne({ where: { name: "flour" } });
     expect(retrieveChickenEmissionFactor?.name).toBe("flour");
   });
+
   it("should retrieve emission Factors", async () => {
     const carbonEmissionFactors = await carbonEmissionFactorService.findAll();
+    expect(carbonEmissionFactors).toHaveLength(1);
+  });
+
+  it("should retrieve emission Factors by ingredients", async () => {
+    const carbonEmissionFactors = await carbonEmissionFactorService.findByIngredients([
+        { name: "oliveOil", unit: "kg" },
+        { name: "oliveOil", unit: "g" },
+        { name: "bacon", unit: "kg" },
+    ]);
     expect(carbonEmissionFactors).toHaveLength(1);
   });
 });
 
 afterAll(async () => {
+  await GreenlyDataSource.cleanDatabase();
   await dataSource.destroy();
 });

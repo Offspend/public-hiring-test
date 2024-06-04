@@ -3,9 +3,11 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CarbonEmissionFactor } from "./carbonEmissionFactor.entity";
 import { CreateCarbonEmissionFactorDto } from "./dto/create-carbonEmissionFactor.dto";
+import {CarbonEmissionFactorProvider} from "./domain/carbonEmissionFactor.interface";
+import { Ingredient } from "./domain/carbonEmissionFactor.model";
 
 @Injectable()
-export class CarbonEmissionFactorsService {
+export class CarbonEmissionFactorsService implements CarbonEmissionFactorProvider {
   constructor(
     @InjectRepository(CarbonEmissionFactor)
     private carbonEmissionFactorRepository: Repository<CarbonEmissionFactor>
@@ -13,6 +15,12 @@ export class CarbonEmissionFactorsService {
 
   findAll(): Promise<CarbonEmissionFactor[]> {
     return this.carbonEmissionFactorRepository.find();
+  }
+
+  findByIngredients(ingredients: Ingredient[]): Promise<CarbonEmissionFactor[]> {
+    return this.carbonEmissionFactorRepository.find({
+      where: ingredients,
+    })
   }
 
   save(
