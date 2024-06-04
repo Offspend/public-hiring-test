@@ -1,5 +1,6 @@
 import { dataSource } from "../config/dataSource";
 import { CarbonEmissionFactor } from "./carbonEmissionFactor/carbonEmissionFactor.entity";
+import {CarbonFootprintCalculation} from "./carbonFootprintCalculation/carbonFootprintCalculation.entity";
 
 export const TEST_CARBON_EMISSION_FACTORS = [
   {
@@ -84,3 +85,45 @@ export const seedTestCarbonEmissionFactors = async () => {
 if (require.main === module) {
   seedTestCarbonEmissionFactors().catch((e) => console.error(e));
 }
+
+export const TEST_FOOTPRINT_CALCULATIONS = [
+  {
+    name: "hamCheesePizza",
+    ingredients: [
+      { name: "ham", quantity: 0.1, unit: "kg" },
+      { name: "cheese", quantity: 0.15, unit: "kg" },
+      { name: "tomato", quantity: 0.4, unit: "kg" },
+      { name: "floor", quantity: 0.7, unit: "kg" },
+      { name: "oliveOil", quantity: 0.3, unit: "kg" },
+    ],
+    carbonFootprint: 1.1,
+  },
+  {
+    name: "cheesePizza",
+    ingredients: [
+      { name: "cheese", quantity: 0.15, unit: "kg" },
+      { name: "tomato", quantity: 0.4, unit: "kg" },
+      { name: "floor", quantity: 0.7, unit: "kg" },
+      { name: "oliveOil", quantity: 0.3, unit: "kg" },
+    ],
+    carbonFootprint: 1.,
+  },
+].map((args) => {
+  return new CarbonFootprintCalculation({
+    foodProductName: args.name,
+    ingredients: args.ingredients,
+    carbonFootprint: args.carbonFootprint,
+  });
+});
+
+export const getTestFootprintCalculation = (foodProductName: string) => {
+  const footprintCalculation = TEST_FOOTPRINT_CALCULATIONS.find(
+      (fc) => fc.foodProductName === foodProductName
+  );
+  if (!footprintCalculation) {
+    throw new Error(
+        `test footprint calculation with name ${foodProductName} could not be found`
+    );
+  }
+  return footprintCalculation;
+};
