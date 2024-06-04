@@ -54,6 +54,14 @@ When the data schema is updated, the database needs to be synchronised with the 
 migrationName=<name> yarn migration:generate
 ```
 
+## Online documentation
+
+This projects uses Swagger to generate the API documentation. You can access it at the following URL in local:
+
+```
+http://localhost:3000/doc
+```
+
 # Hiring Test
 
 When working on the following exercise, in addition to answering the product need, to give particular attention to the following points:
