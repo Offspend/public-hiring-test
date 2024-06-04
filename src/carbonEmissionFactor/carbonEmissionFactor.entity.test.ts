@@ -33,5 +33,6 @@ describe("FoodProductEntity", () => {
 });
 
 afterAll(async () => {
+  await GreenlyDataSource.cleanDatabase();
   await dataSource.destroy();
 });
