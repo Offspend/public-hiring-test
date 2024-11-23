@@ -21,6 +21,12 @@ First you need to start, migrate and seed the db :
 $ yarn init-project
 ```
 
+Then you need to clone the `.env.example` file as `.env` and configure the file on your needs
+
+```
+cp .env.example .env
+```
+
 you can then start the server:
 
 ```bash
