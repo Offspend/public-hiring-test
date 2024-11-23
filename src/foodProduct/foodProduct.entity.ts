@@ -11,6 +11,7 @@ export class FoodProduct extends BaseEntity {
   name: string;
 
   @Column({
+    nullable: true,
     type: "float",
   })
   carbonFootprint: number | null;

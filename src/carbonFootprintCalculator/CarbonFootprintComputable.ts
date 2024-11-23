@@ -1,5 +1,5 @@
 export type CarbonFootprintComputable = {
   emissionCO2eInKgPerUnit: number;
-  unit: 'kg';
+  unit: string;
   quantity: number;
 } | never;

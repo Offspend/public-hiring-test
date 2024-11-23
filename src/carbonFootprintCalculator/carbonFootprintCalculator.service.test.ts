@@ -20,7 +20,6 @@ describe("CarbonFootprintCalculatorService.service", () => {
     expect(() => {
       carbonFootprintCalculatorService.computeCarbonFootprint('agrybalise', {
         quantity: 3,
-        // @ts-expect-error error on purpose to throw RangeError
         unit: 'g',
         emissionCO2eInKgPerUnit: .12,
       })
@@ -28,7 +27,6 @@ describe("CarbonFootprintCalculatorService.service", () => {
   });
   it("should throw error because strategy does not exists", async () => {
     expect(() => {
-      // @ts-expect-error the strategy does not exist on purpose for the test
       carbonFootprintCalculatorService.computeCarbonFootprint('a' , {
         quantity: 3,
         unit: 'kg',

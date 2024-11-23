@@ -8,5 +8,6 @@ import { CarbonEmissionFactorsController } from "./carbonEmissionFactors.control
   imports: [TypeOrmModule.forFeature([CarbonEmissionFactor])],
   providers: [CarbonEmissionFactorsService],
   controllers: [CarbonEmissionFactorsController],
+  exports: [CarbonEmissionFactorsService],
 })
 export class CarbonEmissionFactorsModule {}

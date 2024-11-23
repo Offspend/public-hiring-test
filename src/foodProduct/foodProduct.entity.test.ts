@@ -1,6 +1,14 @@
 import { GreenlyDataSource, dataSource } from "../../config/dataSource";
 import { FoodProduct } from "./foodProduct.entity";
 
+const ingredients = [
+  { name: "ham", quantity: 0.1, unit: "kg" },
+  { name: "cheese", quantity: 0.15, unit: "kg" },
+  { name: "tomato", quantity: 0.4, unit: "kg" },
+  { name: "flour", quantity: 0.7, unit: "kg" },
+  { name: "oliveOil", quantity: 0.3, unit: "kg" },
+];
+
 let hamPizzaFoodProductComputed: FoodProduct;
 let hamPizzaFoodProductNotComputed: FoodProduct;
 beforeAll(async () => {
@@ -8,26 +16,14 @@ beforeAll(async () => {
   hamPizzaFoodProductComputed = new FoodProduct({
     name: 'Ham Pizza',
     recipe: {
-      ingredients: [
-        { name: "ham", quantity: 0.1, unit: "kg" },
-        { name: "cheese", quantity: 0.15, unit: "kg" },
-        { name: "tomato", quantity: 0.4, unit: "kg" },
-        { name: "floor", quantity: 0.7, unit: "kg" },
-        { name: "oliveOil", quantity: 0.3, unit: "kg" },
-      ],
+      ingredients,
     },
     carbonFootprint: 50, /// This value is not the real computation
   });
   hamPizzaFoodProductNotComputed = new FoodProduct({
     name: 'Ham Pizza',
     recipe: {
-      ingredients: [
-        { name: "ham", quantity: 0.1, unit: "kg" },
-        { name: "cheese", quantity: 0.15, unit: "kg" },
-        { name: "tomato", quantity: 0.4, unit: "kg" },
-        { name: "floor", quantity: 0.7, unit: "kg" },
-        { name: "oliveOil", quantity: 0.3, unit: "kg" },
-      ],
+      ingredients,
     },
     carbonFootprint: null,
   });
@@ -41,12 +37,12 @@ describe("FoodProductEntity", () => {
       expect(hamPizzaFoodProductComputed.name).toBe("Ham Pizza");
       expect(hamPizzaFoodProductNotComputed.name).toBe("Ham Pizza");
     });
-    it("should throw an error if the ingredients is empty", () => {
+    it("should throw an error if the name is empty", () => {
       expect(() => {
         new FoodProduct({
-          name: 'Test',
+          name: '',
           recipe: {
-            ingredients: [],
+            ingredients,
           },
           carbonFootprint: null,
         });
