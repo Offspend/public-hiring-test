@@ -32,12 +32,16 @@ beforeEach(async () => {
 
 describe("FoodProduct.service", () => {
   it("should save new foodProducts", async () => {
-    await foodProductService.save([
-      vegetarianPizza,
-    ], true);
-    await foodProductService.save([
-      hamSandwich,
-    ], false);
+    await foodProductService.save({
+      items: [
+        vegetarianPizza,
+      ],
+    }, false);
+    await foodProductService.save({
+      items: [
+        hamSandwich,
+      ],
+    }, true);
 
     const retrieveVegetarianPizzaFoodProduct = await dataSource
             .getRepository(FoodProduct)
@@ -52,6 +56,24 @@ describe("FoodProduct.service", () => {
     expect(retrieveHamSandwichFoodProduct?.carbonFootprint).not.toBeNull();
 
   });
+  it("should compute and save all existing carbon footprint", async () => {
+    const beforeResult = await dataSource
+            .getRepository(FoodProduct)
+            .find();
+    for (const item of beforeResult) {
+      expect(item.carbonFootprint).toBeNull();
+    }
+
+    await foodProductService.computeAndSaveAllCarbonFootprint();
+
+    const afterResult = await dataSource
+            .getRepository(FoodProduct)
+            .find();
+    for (const item of afterResult) {
+      expect(item.carbonFootprint).not.toBeNull();
+    }
+
+  });
   it("should retrieve food products", async () => {
     const foodProducts = await foodProductService.findAll();
     expect(foodProducts).toHaveLength(1);
@@ -63,6 +85,45 @@ describe("FoodProduct.service", () => {
     await foodProductService.computeCarbonFootprint(retrieveHamPizzaFoodProduct!);
     expect(retrieveHamPizzaFoodProduct!.carbonFootprint).not.toBeNull();
     await retrieveHamPizzaFoodProduct!.save();
+  });
+  it("should get carbon footprint for recipe", async () => {
+    const value = await foodProductService.getCarbonFootprintForRecipe({
+      ingredients: [
+        { name: "ham", quantity: 0.1, unit: "kg" },
+        { name: "cheese", quantity: 0.15, unit: "kg" },
+        { name: "tomato", quantity: 0.4, unit: "kg" },
+        { name: "flour", quantity: 0.7, unit: "kg" },
+        { name: "oliveOil", quantity: 0.3, unit: "kg" },
+      ]
+    });
+    expect(value).toBe(0.22399999999999998)
+  });
+  it("should fail to get carbon footprint for recipe due to missing ingredient data", async () => {
+    try {
+      await foodProductService.getCarbonFootprintForRecipe({
+        ingredients: [
+          { name: "ham", quantity: 0.1, unit: "kg" },
+          { name: "sweet potato", quantity: 0.1, unit: "kg" },
+        ]
+      });
+      // noinspection ExceptionCaughtLocallyJS
+      throw new Error('Should not reach this point')
+    } catch (err) {
+      expect(err.message).toMatch('Could not find an EmissionFactor with name "sweet potato"')
+    }
+  });
+  it("should fail to get carbon footprint for recipe due to missing emission factor", async () => {
+    try {
+      await foodProductService.getCarbonFootprintForRecipeWithMap({
+        ingredients: [
+          { name: "ham", quantity: 0.1, unit: "kg" },
+        ]
+      }, new Map());
+      // noinspection ExceptionCaughtLocallyJS
+      throw new Error('Should not reach this point')
+    } catch (err) {
+      expect(err.message).toMatch('Could not find emission factor with name "ham"')
+    }
   });
 });
 

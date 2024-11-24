@@ -46,8 +46,8 @@ export class CarbonEmissionFactorsService {
   }
 
   save(
-    carbonEmissionFactor: CreateCarbonEmissionFactorDto[]
+    carbonEmissionFactor: CreateCarbonEmissionFactorDto
   ): Promise<CarbonEmissionFactor[] | null> {
-    return this.carbonEmissionFactorRepository.save(carbonEmissionFactor);
+    return this.carbonEmissionFactorRepository.save(carbonEmissionFactor.items);
   }
 }

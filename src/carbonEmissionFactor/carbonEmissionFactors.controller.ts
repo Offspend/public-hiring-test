@@ -2,28 +2,35 @@ import { Body, Controller, Get, Logger, Post } from "@nestjs/common";
 import { CarbonEmissionFactor } from "./carbonEmissionFactor.entity";
 import { CarbonEmissionFactorsService } from "./carbonEmissionFactors.service";
 import { CreateCarbonEmissionFactorDto } from "./dto/create-carbonEmissionFactor.dto";
+import {LoggerFactory} from "../appLogger/loggerFactory";
+import {LoggerService} from "@nestjs/common/services/logger.service";
 
 @Controller("carbon-emission-factors")
 export class CarbonEmissionFactorsController {
+  private readonly logger: LoggerService;
+
   constructor(
-    private readonly carbonEmissionFactorService: CarbonEmissionFactorsService
-  ) {}
+    private readonly carbonEmissionFactorService: CarbonEmissionFactorsService,
+    loggerFactory: LoggerFactory,
+  ) {
+    this.logger = loggerFactory.createLogger('carbon-emission-factors');
+  }
 
   @Get()
   getCarbonEmissionFactors(): Promise<CarbonEmissionFactor[]> {
-    Logger.log(
-      `[carbon-emission-factors] [GET] CarbonEmissionFactor: getting all CarbonEmissionFactors`
+    this.logger.log(
+      `[GET] CarbonEmissionFactor: getting all CarbonEmissionFactors`
     );
     return this.carbonEmissionFactorService.findAll();
   }
 
   @Post()
   createCarbonEmissionFactors(
-    @Body() carbonEmissionFactors: CreateCarbonEmissionFactorDto[]
+    @Body() carbonEmissionFactors: CreateCarbonEmissionFactorDto
   ): Promise<CarbonEmissionFactor[] | null> {
     ``;
-    Logger.log(
-      `[carbon-emission-factors] [POST] CarbonEmissionFactor: ${carbonEmissionFactors} created`
+    this.logger.log(
+      `[POST] CarbonEmissionFactor: ${carbonEmissionFactors} created`
     );
     return this.carbonEmissionFactorService.save(carbonEmissionFactors);
   }

@@ -24,10 +24,12 @@ beforeEach(async () => {
 
 describe("CarbonEmissionFactors.service", () => {
   it("should save new emissionFactors", async () => {
-    await carbonEmissionFactorService.save([
-      hamEmissionFactor,
-      flourEmissionFactor,
-    ]);
+    await carbonEmissionFactorService.save({
+      items: [
+        hamEmissionFactor,
+        flourEmissionFactor,
+      ],
+    });
     const retrieveChickenEmissionFactor = await dataSource
       .getRepository(CarbonEmissionFactor)
       .findOne({ where: { name: "flour" } });
@@ -36,6 +38,10 @@ describe("CarbonEmissionFactors.service", () => {
   it("should retrieve emission Factors", async () => {
     const carbonEmissionFactors = await carbonEmissionFactorService.findAll();
     expect(carbonEmissionFactors).toHaveLength(1);
+  });
+  it("should retrieve one emission factor by name", async () => {
+    const carbonEmissionFactor = await carbonEmissionFactorService.findByName('oliveOil');
+    expect(carbonEmissionFactor!.name).toStrictEqual('oliveOil');
   });
 });
 

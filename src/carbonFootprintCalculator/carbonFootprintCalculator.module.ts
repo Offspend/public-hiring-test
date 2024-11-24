@@ -7,4 +7,4 @@ import {CarbonFootprintCalculatorService} from "./carbonFootprintCalculator.serv
   controllers: [],
   exports: [CarbonFootprintCalculatorService],
 })
-export class CarbonEmissionFactorsModule {}
+export class CarbonFootprintCalculatorModule {}

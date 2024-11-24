@@ -46,18 +46,25 @@ describe("CarbonEmissionFactorsController", () => {
 
   it("POST /carbon-emission-factors", async () => {
     const carbonEmissionFactorArgs = {
-      name: "Test Carbon Emission Factor",
-      unit: "kg",
-      emissionCO2eInKgPerUnit: 12,
-      source: "Test Source",
+      items: [{
+        name: "Test Carbon Emission Factor",
+        unit: "kg",
+        emissionCO2eInKgPerUnit: 12,
+        source: "Test Source",
+      }],
     };
     return request(app.getHttpServer())
       .post("/carbon-emission-factors")
-      .send([carbonEmissionFactorArgs])
+      .send(carbonEmissionFactorArgs)
       .expect(201)
       .expect(({ body }) => {
         expect(body.length).toEqual(1);
-        expect(body[0]).toMatchObject(carbonEmissionFactorArgs);
+        expect(body[0]).toMatchObject({
+          name: "Test Carbon Emission Factor",
+          unit: "kg",
+          emissionCO2eInKgPerUnit: 12,
+          source: "Test Source",
+        });
       });
   });
 });

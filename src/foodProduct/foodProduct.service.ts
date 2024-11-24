@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import {IsNull, Repository} from "typeorm";
 import {FoodProduct} from "./foodProduct.entity";
 import {CarbonEmissionFactorsService} from "../carbonEmissionFactor/carbonEmissionFactors.service";
 import {CreateFoodProductDto} from "./dto/create-foodProduct.dto";
 import {CarbonFootprintCalculatorService} from "../carbonFootprintCalculator/carbonFootprintCalculator.service";
+import {CarbonEmissionFactor} from "../carbonEmissionFactor/carbonEmissionFactor.entity";
 
 @Injectable()
 export class FoodProductService {
@@ -16,11 +17,11 @@ export class FoodProductService {
   ) {}
 
   async save(
-          foodProduct: CreateFoodProductDto[],
+          foodProduct: CreateFoodProductDto,
           autoComputeCarbonFootprint: boolean,
   ): Promise<FoodProduct[] | null> {
     const toSave: FoodProduct[] = [];
-    for (const product of foodProduct) {
+    for (const product of foodProduct.items) {
       const base: Pick<FoodProduct, 'name' | 'recipe'> = {
         name: product.name,
         recipe: product.recipe,
@@ -28,13 +29,13 @@ export class FoodProductService {
       if (autoComputeCarbonFootprint) {
         toSave.push(new FoodProduct({
           ...base,
-          carbonFootprint: null,
-        }))
+          carbonFootprint: await this.getCarbonFootprintForRecipe(product.recipe),
+        }));
       } else {
         toSave.push(new FoodProduct({
           ...base,
-          carbonFootprint: await this.getCarbonFootprintForRecipe(product.recipe),
-        }))
+          carbonFootprint: null,
+        }));
       }
     }
     return this.foodProductRepository.save(toSave);
@@ -48,7 +49,22 @@ export class FoodProductService {
     product.carbonFootprint = await this.getCarbonFootprintForRecipe(product.recipe)
   }
 
-  private async getCarbonFootprintForRecipe(recipe: {
+  async computeAndSaveAllCarbonFootprint(): Promise<number> {
+    const allToSave = await this.foodProductRepository.find({
+      where: {
+        carbonFootprint: IsNull(),
+      },
+    });
+    let updated = 0;
+    for(const carbonFootprint of allToSave) {
+      await this.computeCarbonFootprint(carbonFootprint);
+      await carbonFootprint.save();
+      updated += 1;
+    }
+    return updated;
+  }
+
+  public async getCarbonFootprintForRecipe(recipe: {
     ingredients: {
       name: string;
       quantity: number;
@@ -58,10 +74,20 @@ export class FoodProductService {
     const emissionFactorMap = await this.carbonEmissionFactorsService.getEmissionFactorMapByNames(
             recipe.ingredients.map((ingredient) => ingredient.name)
     );
+    return this.getCarbonFootprintForRecipeWithMap(recipe, emissionFactorMap);
+  }
+
+  public async getCarbonFootprintForRecipeWithMap(recipe: {
+    ingredients: {
+      name: string;
+      quantity: number;
+      unit: string;
+    }[],
+  }, emissionFactorMap: Map<string, CarbonEmissionFactor>): Promise<number> {
     return recipe.ingredients.reduce((partialSum, ingredient) => {
       const ingredientEmissionFactor = emissionFactorMap.get(ingredient.name);
       if (!ingredientEmissionFactor) {
-        throw new Error(`Could not find ingredient ${ingredient.name}`);
+        throw new Error(`Could not find emission factor with name "${ingredient.name}"`);
       }
       return partialSum + this.carbonFootprintCalculatorService.computeCarbonFootprint(ingredientEmissionFactor.source, {
         unit: ingredient.unit,

@@ -16,6 +16,15 @@ describe("CarbonFootprintCalculatorService.service", () => {
     });
     expect(carbonFootprintValue).toBe(.36);
   });
+  it("should throw range error because strategy is not set", async () => {
+    expect(() => {
+      carbonFootprintCalculatorService.computeCarbonFootprint('', {
+        quantity: 3,
+        unit: 'g',
+        emissionCO2eInKgPerUnit: .12,
+      })
+    }).toThrow('strategy must not be empty');
+  });
   it("should throw range error because unit is not handled", async () => {
     expect(() => {
       carbonFootprintCalculatorService.computeCarbonFootprint('agrybalise', {
