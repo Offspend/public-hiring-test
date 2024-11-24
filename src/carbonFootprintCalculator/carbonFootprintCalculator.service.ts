@@ -1,14 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import {CarbonFootprintComputable} from "./CarbonFootprintComputable";
+import { Injectable } from '@nestjs/common';
+
+import { CarbonFootprintComputable } from './CarbonFootprintComputable';
+
+type CarbonFootprintCalculateFn = (item: CarbonFootprintComputable) => number;
 
 @Injectable()
 export class CarbonFootprintCalculatorService {
+  private readonly strategyMap = new Map<string, CarbonFootprintCalculateFn>();
 
-  private readonly strategyMap = new Map<string, (item: CarbonFootprintComputable) => number>;
-
-  constructor(
-  ) {
-    const strategyMap = new Map<string, (item: CarbonFootprintComputable) => number>();
+  constructor() {
+    const strategyMap = new Map<string, CarbonFootprintCalculateFn>();
     strategyMap.set('agrybalise', this.computeAgrybaliseCarbonFootprint);
     this.strategyMap = strategyMap;
   }
@@ -22,10 +23,7 @@ export class CarbonFootprintCalculatorService {
     }
   }
 
-  computeCarbonFootprint(
-          strategy: string,
-          item: CarbonFootprintComputable,
-  ): number {
+  computeCarbonFootprint(strategy: string, item: CarbonFootprintComputable): number {
     if (!strategy.length) {
       throw new Error('strategy must not be empty');
     }

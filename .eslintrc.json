@@ -1,0 +1,117 @@
+{
+  "env": {
+    "browser": false,
+    "node": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "jest"
+  ],
+  "rules": {
+    "max-len": [
+      "error",
+      {
+        "code": 130,
+        "ignoreStrings": true
+      }
+    ],
+    "lines-between-class-members": "off",
+    "import/prefer-default-export": "off",
+    "class-methods-use-this": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "import/no-extraneous-dependencies": [
+      "off",
+      {
+        "devDependencies": [
+          "**/*.test.js",
+          "**/*.e2e-test.js"
+        ]
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "object",
+          "type"
+        ]
+      }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": {
+          "consistent": true,
+          "multiline": true
+        },
+        "ObjectPattern": {
+          "consistent": true,
+          "multiline": true
+        }
+      }
+    ],
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": [
+      "error",
+      {
+        "allow": [
+          "constructors"
+        ]
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "node_modules/**"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.e2e-test.ts"
+      ],
+      "env": {
+        "jest": true
+      },
+      "plugins": [
+        "jest"
+      ]
+    }
+  ]
+}

@@ -1,36 +1,36 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("food_products")
+@Entity('food_products')
 export class FoodProduct extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column({
     nullable: false,
   })
-  name: string;
+    name: string;
 
   @Column({
     nullable: true,
-    type: "float",
+    type: 'float',
   })
-  carbonFootprint: number | null;
+    carbonFootprint: number | null;
 
   @Column({
     nullable: false,
-    type: 'json'
+    type: 'json',
   })
-  recipe: {
+    recipe: {
     ingredients: {
       name: string;
       quantity: number;
       unit: string;
-    }[]
+    }[];
   };
 
   sanitize() {
-    if (this.name === "") {
-      throw new Error("Name cannot be empty");
+    if (this.name === '') {
+      throw new Error('Name cannot be empty');
     }
   }
 
@@ -42,8 +42,8 @@ export class FoodProduct extends BaseEntity {
         name: string;
         quantity: number;
         unit: string;
-      }[]
-    },
+      }[];
+    };
   }) {
     super();
 

@@ -1,12 +1,12 @@
-import { GreenlyDataSource, dataSource } from "../../config/dataSource";
-import { FoodProduct } from "./foodProduct.entity";
+import { dataSource, GreenlyDataSource } from '../../config/dataSource';
+import { FoodProduct } from './foodProduct.entity';
 
 const ingredients = [
-  { name: "ham", quantity: 0.1, unit: "kg" },
-  { name: "cheese", quantity: 0.15, unit: "kg" },
-  { name: "tomato", quantity: 0.4, unit: "kg" },
-  { name: "flour", quantity: 0.7, unit: "kg" },
-  { name: "oliveOil", quantity: 0.3, unit: "kg" },
+  { name: 'ham', quantity: 0.1, unit: 'kg' },
+  { name: 'cheese', quantity: 0.15, unit: 'kg' },
+  { name: 'tomato', quantity: 0.4, unit: 'kg' },
+  { name: 'flour', quantity: 0.7, unit: 'kg' },
+  { name: 'oliveOil', quantity: 0.3, unit: 'kg' },
 ];
 
 let hamPizzaFoodProductComputed: FoodProduct;
@@ -31,14 +31,15 @@ beforeAll(async () => {
 beforeEach(async () => {
   await GreenlyDataSource.cleanDatabase();
 });
-describe("FoodProductEntity", () => {
-  describe("constructor", () => {
-    it("should create an food product", () => {
-      expect(hamPizzaFoodProductComputed.name).toBe("Ham Pizza");
-      expect(hamPizzaFoodProductNotComputed.name).toBe("Ham Pizza");
+describe('FoodProductEntity', () => {
+  describe('constructor', () => {
+    it('should create an food product', () => {
+      expect(hamPizzaFoodProductComputed.name).toBe('Ham Pizza');
+      expect(hamPizzaFoodProductNotComputed.name).toBe('Ham Pizza');
     });
-    it("should throw an error if the name is empty", () => {
+    it('should throw an error if the name is empty', () => {
       expect(() => {
+        // eslint-disable-next-line no-new
         new FoodProduct({
           name: '',
           recipe: {

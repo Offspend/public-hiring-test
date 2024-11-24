@@ -1,17 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-class IngredientItem {
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  quantity: number;
-
-  @ApiProperty()
-  unit: string;
-}
+import { IngredientItem } from './ingredientItem.dto';
 
 export class Recipe {
   @ApiProperty({ type: [IngredientItem] })
-  ingredients: IngredientItem[];
+    ingredients: IngredientItem[];
 }

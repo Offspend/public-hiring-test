@@ -1,5 +1,6 @@
-import { Module } from "@nestjs/common";
-import {CarbonFootprintCalculatorService} from "./carbonFootprintCalculator.service";
+import { Module } from '@nestjs/common';
+
+import { CarbonFootprintCalculatorService } from './carbonFootprintCalculator.service';
 
 @Module({
   imports: [],

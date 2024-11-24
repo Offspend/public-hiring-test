@@ -1,43 +1,32 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("carbon_emission_factors")
+@Entity('carbon_emission_factors')
 export class CarbonEmissionFactor extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number;
 
   @Column({
     nullable: false,
   })
-  name: string;
-
-  @Column({
-    nullable: false,
-  })
-  unit: string;
-
-  @Column({
-    type: "float",
-    nullable: false,
-  })
-  emissionCO2eInKgPerUnit: number;
-
-  @Column({
-    nullable: false,
-  })
-  source: string;
-
-  sanitize() {
-    if (this.source === "") {
-      throw new Error("Source cannot be empty");
-    }
-  }
-
-  constructor(props: {
     name: string;
+
+  @Column({
+    nullable: false,
+  })
     unit: string;
+
+  @Column({
+    type: 'float',
+    nullable: false,
+  })
     emissionCO2eInKgPerUnit: number;
+
+  @Column({
+    nullable: false,
+  })
     source: string;
-  }) {
+
+  constructor(props: { name: string; unit: string; emissionCO2eInKgPerUnit: number; source: string }) {
     super();
 
     this.name = props?.name;
@@ -45,5 +34,11 @@ export class CarbonEmissionFactor extends BaseEntity {
     this.emissionCO2eInKgPerUnit = props?.emissionCO2eInKgPerUnit;
     this.source = props?.source;
     this.sanitize();
+  }
+
+  sanitize() {
+    if (this.source === '') {
+      throw new Error('Source cannot be empty');
+    }
   }
 }

@@ -1,20 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CarbonEmissionFactorItem {
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  unit: string;
-
-  @ApiProperty()
-  emissionCO2eInKgPerUnit: number;
-
-  @ApiProperty()
-  source: string;
-}
+import { CarbonEmissionFactorItem } from './shared/create-carbonEmissionFactorItem.dto';
 
 export class CreateCarbonEmissionFactorDto {
   @ApiProperty({ type: [CarbonEmissionFactorItem] })
-  items: CarbonEmissionFactorItem[];
+    items: CarbonEmissionFactorItem[];
 }

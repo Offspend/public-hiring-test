@@ -1,15 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
-import {Recipe} from "./shared/foodProductRecipe.dto";
+import { ApiProperty } from '@nestjs/swagger';
 
-class CreateFoodProductItem {
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  recipe: Recipe;
-}
+import { CreateFoodProductItem } from './shared/create-foodProductItem.dto';
 
 export class CreateFoodProductDto {
   @ApiProperty({ type: [CreateFoodProductItem] })
-  items: CreateFoodProductItem[];
+    items: CreateFoodProductItem[];
 }
