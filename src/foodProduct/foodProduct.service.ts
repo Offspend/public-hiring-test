@@ -90,6 +90,10 @@ export class FoodProductService {
       if (!ingredientEmissionFactor) {
         throw new Error(`Could not find emission factor with name "${ingredient.name}"`);
       }
+      /*
+       @TODO I should check ingredient.unit and ingredientEmissionFactor.unit instead
+         of assuming they are the same, but I have to stop the test for today
+       */
       return (
         partialSum
         + this.carbonFootprintCalculatorService.computeCarbonFootprint(ingredientEmissionFactor.source, {
